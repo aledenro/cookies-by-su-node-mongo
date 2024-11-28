@@ -2,8 +2,10 @@
   "name": "cookies-by-su-node-mongo",
   "version": "1.0.0",
   "description": "Proyecto NoSQL",
-  "main": "index.js",
+  "main": "src/app.js",
   "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
