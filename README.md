@@ -55,3 +55,11 @@ content: [
 @tailwind utilities;
 
 Puedes volver a correr el Front ahora con tailwind instalado
+
+# Archivo .env
+
+MONGO_URL=mongodb+srv://USER:PASSWORD@COLLECTIONCODE/COLLECTIONAME?retryWrites=true&w=majority
+
+> EJEMPLO 
+
+MONGO_URL=mongodb+srv://user:password@cookiesbysudb.ej38r.mongodb.net/CookiesBySuDB?retryWrites=true&w=majority
