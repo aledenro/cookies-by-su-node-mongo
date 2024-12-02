@@ -14,6 +14,7 @@ const User = new mongoose.Schema(
     roles: [{ type: String }],
     password: { type: String },
     fecha_registro: { type: Date },
+    estado: { type: Boolean },
   },
   { collection: "Users" }
 );
