@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        anton: ['AntonSC', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'], 
+        lilita: ['LilitaOne', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }

@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "AntonSC";
+  src: url("./assets/fonts/AntonSC-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+    font-family: "LilitaOne";
+    src: url("./assets/fonts/LilitaOne-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }

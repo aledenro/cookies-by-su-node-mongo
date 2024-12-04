@@ -59,6 +59,8 @@ Puedes volver a correr el Front ahora con tailwind instalado
 # Archivo .env
 
 MONGO_URL=mongodb+srv://USER:PASSWORD@COLLECTIONCODE/COLLECTIONAME?retryWrites=true&w=majority
+TOKEN_SECRET=your_secret_key
+NODE_ENV=development
 
 > EJEMPLO 
 
