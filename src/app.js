@@ -15,6 +15,7 @@ const productosRecomendadosRoutes = require("./routes/productosRecomendadosRoute
 const estadisticasVentasRoutes = require("./routes/estadisticasVentasRoutes");
 const empleadosRoutes = require("./routes/empleadosRoutes");
 const productosDescatalogadosRoutes = require("./routes/productosDescatalogadosRoutes");
+const pedidosRoutes = require("./routes/pedidosRoutes");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.routes");
 const cors = require("cors");
@@ -53,7 +54,6 @@ app.use(express.json());
 // Middleware para procesar datos codificados en URL
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 app.use("/api/", userRoutes);
 app.use("/api/descuentos/", descuentosRoutes);
 app.use("/api/pedidos-personalizados", pedidosPersonalizadosRoutes);
@@ -67,6 +67,7 @@ app.use("/api/estadisticas-ventas", estadisticasVentasRoutes);
 app.use("/api/empleados", empleadosRoutes);
 app.use("/api/productos-descatalogados", productosDescatalogadosRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/pedidos", pedidosRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

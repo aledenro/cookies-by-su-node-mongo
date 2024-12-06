@@ -4,7 +4,7 @@ import { GiCookie } from "react-icons/gi";
 import { useAuth } from "../context/authContext";
 
 const Navbar = () => {
-  const { user, isAuthenticated, logout } = useAuth(); // Cambiado `users` a `user`
+  const { user, isAuthenticated, logout } = useAuth(); 
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-90 backdrop-blur-md shadow-lg rounded-full px-8 py-3 z-50 border border-gray-200 w-11/12 max-w-6xl">
@@ -15,14 +15,12 @@ const Navbar = () => {
         </div>
 
         <ul className="flex space-x-8 text-sm font-medium text-gray-600">
-          {/* Siempre muestra el Blog */}
           <li>
             <Link to="/blog" className="hover:text-gray-900 transition duration-300">
               Blog
             </Link>
           </li>
 
-          {/* Mostrar el Login solo si no está autenticado */}
           {!isAuthenticated && (
             <li>
               <Link to="/login" className="hover:text-gray-900 transition duration-300">
@@ -31,7 +29,6 @@ const Navbar = () => {
             </li>
           )}
 
-          {/* Mostrar opciones si está autenticado */}
           {isAuthenticated && (
             <>
               <li>
@@ -40,7 +37,6 @@ const Navbar = () => {
                 </Link>
               </li>
 
-              {/* Mostrar Panel solo si el usuario es Admin */}
               {user?.roles?.includes("Admin") && (
                 <li>
                   <Link to="/admin-panel" className="hover:text-gray-900 transition duration-300">
@@ -49,7 +45,6 @@ const Navbar = () => {
                 </li>
               )}
 
-              {/* Botón de Logout */}
               <li>
                 <button
                   onClick={logout}

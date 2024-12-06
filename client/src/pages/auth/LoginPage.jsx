@@ -10,7 +10,7 @@ export function LoginPage() {
   const {
     register,
     handleSubmit,
-    reset, // Para limpiar el formulario después de un intento exitoso
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(loginSchema),
@@ -21,23 +21,25 @@ export function LoginPage() {
 
   const onSubmit = async (data) => {
     try {
-      await signin(data);
-      reset(); // Limpia los campos del formulario al iniciar sesión correctamente
+      const response = await signin(data); 
+      localStorage.setItem("clienteId", response.id); 
+      reset();
+      navigate("/"); 
     } catch (error) {
-      console.error("Error during login:", error);
+      console.error("Error durante el login:", error);
     }
   };
 
+
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/"); // Cambiar a tu página de inicio para usuarios autenticados
+      navigate("/");
     }
   }, [isAuthenticated, navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md p-8">
-        {/* Mostrar mensajes de error desde el backend */}
         {Array.isArray(loginErrors) && loginErrors.length > 0 && (
           <div className="space-y-2 mb-4">
             {loginErrors.map((error, i) => (

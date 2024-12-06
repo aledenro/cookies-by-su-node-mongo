@@ -4,9 +4,11 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import OrderPage from "./pages/public/order";
 import AdminPanel from "./pages/admin/AdminPanel";
+import ProductPanel from "./pages/admin/ProductPanel";
+import EmployeePanel from "./pages/admin/EmployeePanel";
 import HomePage from "./pages/HomePage";
-import ProtectedRoute from "./components/ProtectedRoute"; 
-import RoleProtectedRoute from "./components/RoleProtectedRoute"; 
+import ProtectedRoute from "./components/ProtectedRoute";
+import RoleProtectedRoute from "./components/RoleProtectedRoute";
 
 function App() {
   return (
@@ -35,7 +37,26 @@ function App() {
               </RoleProtectedRoute>
             }
           />
+
+          <Route
+            path="/productos-panel"
+            element={
+              <RoleProtectedRoute role="Admin">
+                <ProductPanel />
+              </RoleProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/empleados-panel"
+            element={
+              <RoleProtectedRoute role="Admin">
+                <EmployeePanel />
+              </RoleProtectedRoute>
+            }
+          />
         </Routes>
+
       </Router>
     </AuthProvider>
   );

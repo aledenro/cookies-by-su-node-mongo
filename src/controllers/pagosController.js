@@ -1,13 +1,41 @@
 const pagosService = require("../services/pagosService");
+const carritoService = require("../services/carritoService");
+const productoService = require("../services/productosService"); 
+const Pedido = require("../models/pedidosPersonalizadosModel");
 const mongoose = require("mongoose");
 
 const agregarPago = async (req, res) => {
     try {
-        const {
-            monto = req.body.monto,
-            metodo_pago = req.body.metodo_pago,
-            estado = req.body.estado,
-        } = req.query;
+        const { cliente_id, monto, metodo_pago, estado } = req.body;
+
+        const carrito = await carritoService.obtenerCarrito(cliente_id);
+        if (!carrito || carrito.productos.length === 0) {
+            return res.status(400).json({ error: "El carrito está vacío o no existe." });
+        }
+
+        for (const item of carrito.productos) {
+            const producto = await Producto.findById(item.producto_id);
+            if (!producto) {
+                return res.status(404).json({ error: `Producto con ID ${item.producto_id} no encontrado.` });
+            }
+
+            if (producto.stock < item.cantidad) {
+                return res.status(400).json({
+                    error: `Stock insuficiente para el producto ${producto.nombre}.`,
+                });
+            }
+
+            producto.stock -= item.cantidad;
+            await producto.save();
+        }
+
+        const nuevoPedido = new Pedido({
+            cliente_id,
+            productos: carrito.productos,
+            total: carrito.total,
+            fecha_pedido: new Date(),
+        });
+        await nuevoPedido.save();
 
         const nuevoPago = await pagosService.agregarPago({
             monto,
@@ -15,12 +43,18 @@ const agregarPago = async (req, res) => {
             estado,
         });
 
-        res.status(201).json(nuevoPago);
+        await carritoService.vaciarCarrito(cliente_id);
+
+        res.status(201).json({
+            message: "Pago procesado con éxito.",
+            pago: nuevoPago,
+            pedido: nuevoPedido,
+        });
     } catch (error) {
+        console.error("Error en agregarPago:", error.message);
         res.status(500).json({ error: error.message });
     }
 };
-
 
 const obtenerPagos = async (req, res) => {
     try {

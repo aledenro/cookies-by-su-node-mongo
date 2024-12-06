@@ -12,7 +12,7 @@ const CarritoSchema = new mongoose.Schema(
                     validate: {
                         validator: async function (value) {
                             const producto = await mongoose.model("Producto").findById(this.producto_id);
-                            return value <= producto.stock; // Verificar que la cantidad no exceda el stock
+                            return value <= producto.stock;
                         },
                         message: "La cantidad no puede exceder el stock disponible.",
                     },

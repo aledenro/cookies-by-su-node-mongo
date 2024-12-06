@@ -1,4 +1,5 @@
 const productosService = require("../services/productosService");
+const Producto = require("../models/productosModel");
 const mongoose = require("mongoose");
 
 const agregarProducto = async (req, res) => {
@@ -65,13 +66,14 @@ const actualizarProducto = async (req, res) => {
             return res.status(400).json({ error: "ID inválido" });
         }
 
-        const productoActualizado = await productosService.actualizarProducto(id, req.body);
+        const productoActualizado = await Producto.findByIdAndUpdate(id, req.body, { new: true });
         if (!productoActualizado) {
             return res.status(404).json({ error: "Producto no encontrado" });
         }
 
         res.status(200).json(productoActualizado);
     } catch (error) {
+        console.error("Error al actualizar el producto:", error.message);
         res.status(500).json({ error: error.message });
     }
 };

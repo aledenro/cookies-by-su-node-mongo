@@ -1,4 +1,5 @@
 const Pago = require("../models/pagosModel");
+const Producto = require("../models/productosModel");
 
 const agregarPago = async (pago) => {
     try {
@@ -50,10 +51,25 @@ const eliminarPago = async (id) => {
     }
 };
 
+const reducirStock = async (producto_id, cantidad) => {
+    try {
+        const producto = await Producto.findById(producto_id);
+        if (!producto) throw new Error(`Producto con ID ${producto_id} no encontrado.`);
+        if (producto.stock < cantidad) throw new Error(`Stock insuficiente para el producto ${producto.nombre}.`);
+
+        producto.stock -= cantidad;
+        await producto.save();
+    } catch (error) {
+        console.error("Error al reducir stock:", error.message);
+        throw error;
+    }
+};
+
 module.exports = {
     agregarPago,
     obtenerPagos,
     obtenerPagoPorId,
     actualizarPago,
     eliminarPago,
+    reducirStock,
 };

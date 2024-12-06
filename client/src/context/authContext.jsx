@@ -24,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, [errors]);
 
-  // Registrar usuario
   const signup = async (userData) => {
     try {
       const res = await registerRequest(userData);
@@ -37,11 +36,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Iniciar sesión
   const signin = async (userData) => {
     try {
       const res = await loginRequest(userData);
-      setUser(res.data); // Asegúrate de que `res.data` contiene el campo `roles`
+      setUser(res.data); 
       setIsAuthenticated(true);
     } catch (error) {
       setErrors(Array.isArray(error.response?.data?.message)
@@ -50,15 +48,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
   
-
-  // Cerrar sesión
   const logout = () => {
     Cookies.remove("token");
     setUser(null);
     setIsAuthenticated(false);
   };
 
-  // Verificar sesión al cargar la app
   useEffect(() => {
     const checkLogin = async () => {
       const cookies = Cookies.get();

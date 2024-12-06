@@ -5,16 +5,15 @@ class UserController {
   async getUsers(req, res) {
     try {
       const users = await userService.getUsers();
-
-      if (!users || _.isEmpty(users)) {
+      if (!users || users.length === 0) {
         return res.status(404).json({ error: "No se encontraron usuarios." });
       }
-
-      return res.json({ users: users });
+      res.json({ users });
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
   }
+
 
   async getUserById(req, res) {
     try {
@@ -92,21 +91,26 @@ class UserController {
   async updateUserRoles(req, res) {
     try {
       const id = req.params.id;
-      const data = req.body;
+      const { roles } = req.body;
 
-      const user = await userService.updateUserRoles(id, data);
-
-      if (!user || _.isEmpty(user)) {
-        return res
-          .status(404)
-          .json({ error: `No se encontró un usuario con el id ${id}.` });
+      if (!roles || !Array.isArray(roles)) {
+        return res.status(400).json({ error: "Se requiere un array de roles válido." });
       }
 
-      return res.json({ user: user });
+      const currentAdminCount = await userService.getAdminCount();
+      const user = await userService.getUserById(id);
+
+      if (currentAdminCount === 1 && user.roles.includes("Admin") && !roles.includes("Admin")) {
+        return res.status(400).json({ error: "No se puede eliminar el último administrador." });
+      }
+
+      const updatedUser = await userService.updateUserRoles(id, { roles });
+      return res.json({ user: updatedUser });
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
   }
+
 
   async createUser(req, res) {
     try {

@@ -24,7 +24,7 @@ export function RegisterPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/"); // Cambiar a la página donde redirigirás al usuario autenticado
+      navigate("/"); 
     }
   }, [isAuthenticated, navigate]);
 
