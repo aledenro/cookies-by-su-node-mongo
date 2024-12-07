@@ -30,24 +30,29 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
       setIsAuthenticated(true);
     } catch (error) {
-      setErrors(Array.isArray(error.response?.data?.message)
-        ? error.response?.data?.message
-        : [error.response?.data?.message || "An error occurred"]);
+      setErrors(
+        Array.isArray(error.response?.data?.message)
+          ? error.response?.data?.message
+          : [error.response?.data?.message || "An error occurred"]
+      );
     }
   };
 
   const signin = async (userData) => {
     try {
       const res = await loginRequest(userData);
-      setUser(res.data); 
+      setUser(res.data);
       setIsAuthenticated(true);
+      return res;
     } catch (error) {
-      setErrors(Array.isArray(error.response?.data?.message)
-        ? error.response?.data?.message
-        : [error.response?.data?.message || "Invalid login credentials"]);
+      setErrors(
+        Array.isArray(error.response?.data?.message)
+          ? error.response?.data?.message
+          : [error.response?.data?.message || "Invalid login credentials"]
+      );
     }
   };
-  
+
   const logout = () => {
     Cookies.remove("token");
     setUser(null);

@@ -10,8 +10,6 @@ const OrderPage = () => {
   if (!clienteId) {
     console.error("No se encontró el cliente ID en localStorage.");
   }
-  
-
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,13 +29,16 @@ const OrderPage = () => {
         alert("El cliente no está autenticado.");
         return;
       }
-  
+
       try {
         const res = await axios.get(`${apiBaseUrl}/carrito/${clienteId}`);
         console.log("Carrito recibido:", res.data);
         setCart(res.data.productos || []);
       } catch (error) {
-        console.error("Error al cargar el carrito:", error.response?.data || error.message);
+        console.error(
+          "Error al cargar el carrito:",
+          error.response?.data || error.message
+        );
       }
     };
 
@@ -46,12 +47,12 @@ const OrderPage = () => {
   }, [clienteId]);
 
   const handleAddToCart = async (product, quantity) => {
-    const clienteId = localStorage.getItem("userId");
+    const clienteId = localStorage.getItem("clienteId");
     if (!clienteId) {
       alert("El cliente no está autenticado.");
       return;
     }
-  
+
     try {
       const payload = {
         cliente_id: clienteId,
@@ -62,31 +63,37 @@ const OrderPage = () => {
           },
         ],
       };
-  
+
       const res = await axios.post(`${apiBaseUrl}/carrito/agregar`, payload);
       console.log("Carrito actualizado:", res.data);
       setCart(res.data.productos);
     } catch (error) {
-      console.error("Error al agregar al carrito:", error.response?.data || error.message);
+      console.error(
+        "Error al agregar al carrito:",
+        error.response?.data || error.message
+      );
     }
   };
-  
-  const handleRemoveFromCart = async (productId) => {
-    const clienteId = localStorage.getItem("userId");
+
+  const handleRemoveFromCart = async (product) => {
+    const clienteId = localStorage.getItem("clienteId");
     if (!clienteId) {
       alert("El cliente no está autenticado.");
       return;
     }
-  
+
+    const productId = product["_id"];
+
     try {
-      const res = await axios.delete(`${apiBaseUrl}/carrito/${clienteId}/producto/${productId}`);
+      const res = await axios.delete(
+        `${apiBaseUrl}/carrito/${clienteId}/producto/${productId}`
+      );
       console.log("Producto eliminado del carrito:", res.data);
-      setCart(res.data.productos); 
+      setCart(res.data.productos);
     } catch (error) {
       console.error("Error al eliminar del carrito:", error);
     }
   };
-  
 
   const handleEmptyCart = async () => {
     const clienteId = localStorage.getItem("userId");
@@ -94,7 +101,7 @@ const OrderPage = () => {
       alert("El cliente no está autenticado.");
       return;
     }
-  
+
     try {
       await axios.delete(`${apiBaseUrl}/carrito/${clienteId}/vaciar`);
       setCart([]);
@@ -103,7 +110,6 @@ const OrderPage = () => {
       console.error("Error al vaciar el carrito:", error);
     }
   };
-  
 
   return (
     <div className="bg-gray-100">
@@ -111,9 +117,12 @@ const OrderPage = () => {
       <header className="relative bg-gray-100 overflow-hidden py-20">
         <div className="absolute top-[-100px] left-1/2 transform -translate-x-1/8 w-[500px] h-[200px] bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 rounded-full opacity-50 blur-2xl"></div>
         <div className="relative container mx-auto text-center">
-          <h1 className="text-4xl py-6 font-lilita font-bold text-gray-800 mb-2">Tienda</h1>
+          <h1 className="text-4xl py-6 font-lilita font-bold text-gray-800 mb-2">
+            Tienda
+          </h1>
           <p className="text-gray-600 max-w-2xl text-center mx-auto leading-relaxed">
-            Explora nuestros productos y construye tu carrito para la compra perfecta.
+            Explora nuestros productos y construye tu carrito para la compra
+            perfecta.
           </p>
         </div>
       </header>
@@ -127,15 +136,14 @@ const OrderPage = () => {
                 className="border rounded-lg shadow-lg bg-white hover:shadow-xl transition p-4 flex flex-col justify-between h-90"
               >
                 <img
-                  src={
-                    product.imagen ||
-                    "https://via.placeholder.com/150"
-                  }
+                  src={product.imagen || "https://via.placeholder.com/150"}
                   alt={product.nombre}
                   className="w-full h-50 object-cover rounded-t-lg mb-4"
                 />
                 <div>
-                  <h3 className="text-lg font-bold mb-1 text-center">{product.nombre}</h3>
+                  <h3 className="text-lg font-bold mb-1 text-center">
+                    {product.nombre}
+                  </h3>
                   <p className="text-gray-600 text-sm mb-2 text-center truncate">
                     {product.descripcion}
                   </p>
@@ -156,7 +164,8 @@ const OrderPage = () => {
                       handleAddToCart(
                         product,
                         parseInt(
-                          document.getElementById(`quantity-${product._id}`).value
+                          document.getElementById(`quantity-${product._id}`)
+                            .value
                         )
                       )
                     }
@@ -186,8 +195,12 @@ const OrderPage = () => {
                   />
                   <div className="flex-1 ml-4">
                     <h3 className="font-bold text-sm">{item.nombre}</h3>
-                    <p className="text-gray-600 text-sm">Precio: ${item.precio}</p>
-                    <p className="text-gray-600 text-sm">Cantidad: {item.cantidad}</p>
+                    <p className="text-gray-600 text-sm">
+                      Precio: ${item.precio}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      Cantidad: {item.cantidad}
+                    </p>
                   </div>
                   <button
                     onClick={() => handleRemoveFromCart(item.producto_id)}

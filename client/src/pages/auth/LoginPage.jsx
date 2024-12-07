@@ -21,15 +21,14 @@ export function LoginPage() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await signin(data); 
-      localStorage.setItem("clienteId", response.id); 
+      const response = await signin(data);
+      localStorage.setItem("clienteId", response.data.id);
       reset();
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       console.error("Error durante el login:", error);
     }
   };
-
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,7 +59,9 @@ export function LoginPage() {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
