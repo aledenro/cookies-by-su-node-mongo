@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
+import { forEach } from "lodash";
 
 const OrderPage = () => {
   const [products, setProducts] = useState([]);
@@ -60,6 +61,7 @@ const OrderPage = () => {
           {
             producto_id: product._id,
             cantidad: quantity,
+            precio: product.precio,
           },
         ],
       };
@@ -82,11 +84,9 @@ const OrderPage = () => {
       return;
     }
 
-    const productId = product["_id"];
-
     try {
       const res = await axios.delete(
-        `${apiBaseUrl}/carrito/${clienteId}/producto/${productId}`
+        `${apiBaseUrl}/carrito/${clienteId}/producto/${product}`
       );
       console.log("Producto eliminado del carrito:", res.data);
       setCart(res.data.productos);
@@ -96,7 +96,7 @@ const OrderPage = () => {
   };
 
   const handleEmptyCart = async () => {
-    const clienteId = localStorage.getItem("userId");
+    const clienteId = localStorage.getItem("clienteId");
     if (!clienteId) {
       alert("El cliente no está autenticado.");
       return;
@@ -110,6 +110,49 @@ const OrderPage = () => {
       console.error("Error al vaciar el carrito:", error);
     }
   };
+
+  async function completarPedido() {
+    const clienteId = localStorage.getItem("clienteId");
+    if (!clienteId) {
+      alert("El cliente no está autenticado.");
+      return;
+    }
+
+    if (!cart) {
+      alert("El  carrito está vacio.");
+      return;
+    }
+
+    const prods = [];
+    let total = 0;
+
+    cart.map((item) => {
+      console.log(typeof item);
+      const prod = {
+        producto_id: item.producto_id,
+        cantidad: item.cantidad,
+        precio_unitario: item.precio,
+      };
+
+      total += item.cantidad * item.precio;
+
+      prods.push(prod);
+    });
+
+    const payload = {
+      cliente_id: clienteId,
+      productos: prods,
+      total: total,
+    };
+
+    try {
+      const pedido = await axios.post(`${apiBaseUrl}/pedidos/crear`, payload);
+      console.log(pedido);
+      handleEmptyCart();
+    } catch (error) {
+      console.error("Error al comppletar el pedido:", error);
+    }
+  }
 
   return (
     <div className="bg-gray-100">
@@ -203,7 +246,7 @@ const OrderPage = () => {
                     </p>
                   </div>
                   <button
-                    onClick={() => handleRemoveFromCart(item.producto_id)}
+                    onClick={() => handleRemoveFromCart(item._id)}
                     className="text-red-500 text-sm hover:underline"
                   >
                     Quitar
@@ -219,7 +262,7 @@ const OrderPage = () => {
                   )}
                 </h3>
                 <button
-                  onClick={handleEmptyCart}
+                  onClick={completarPedido}
                   className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white font-semibold w-full py-2 mt-4 rounded-full shadow-md hover:shadow-lg transition-transform"
                 >
                   Finalizar compra
