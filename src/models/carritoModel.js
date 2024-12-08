@@ -17,15 +17,16 @@ const CarritoSchema = new mongoose.Schema(
         cantidad: {
           type: Number,
           required: true,
-          validate: {
-            validator: async function (value) {
-              const producto = await mongoose
-                .model("Producto")
-                .findById(this.producto_id);
-              return value <= producto.stock;
-            },
-            message: "La cantidad no puede exceder el stock disponible.",
-          },
+          // validate: {
+          //   validator: async function (value) {
+          //     const producto = await mongoose
+          //       .model("Producto")
+          //       .findById(this.producto_id);
+
+          //     return value <= producto.stock;
+          //   },
+          //   message: "La cantidad no puede exceder el stock disponible.",
+          // },
         },
         precio: {
           type: Number,

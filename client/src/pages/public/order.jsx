@@ -7,42 +7,41 @@ const OrderPage = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const apiBaseUrl = "http://localhost:4000/api";
-  const clienteId = localStorage.getItem("userId");
+  const clienteId = localStorage.getItem("clienteId");
   if (!clienteId) {
     console.error("No se encontró el cliente ID en localStorage.");
   }
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${apiBaseUrl}/productos`);
+      console.log("Productos recibidos:", res.data);
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Error al cargar los productos:", error);
+    }
+  };
+
+  const fetchCart = async () => {
+    const clienteId = localStorage.getItem("clienteId");
+    if (!clienteId) {
+      console.error("Usuario no autenticado.");
+      alert("El cliente no está autenticado.");
+      return;
+    }
+
+    try {
+      const res = await axios.get(`${apiBaseUrl}/carrito/${clienteId}`);
+      console.log("Carrito recibido:", res.data);
+      setCart(res.data.productos || []);
+    } catch (error) {
+      console.error(
+        "Error al cargar el carrito:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await axios.get(`${apiBaseUrl}/productos`);
-        console.log("Productos recibidos:", res.data);
-        setProducts(res.data);
-      } catch (error) {
-        console.error("Error al cargar los productos:", error);
-      }
-    };
-
-    const fetchCart = async () => {
-      const clienteId = localStorage.getItem("clienteId");
-      if (!clienteId) {
-        console.error("Usuario no autenticado.");
-        alert("El cliente no está autenticado.");
-        return;
-      }
-
-      try {
-        const res = await axios.get(`${apiBaseUrl}/carrito/${clienteId}`);
-        console.log("Carrito recibido:", res.data);
-        setCart(res.data.productos || []);
-      } catch (error) {
-        console.error(
-          "Error al cargar el carrito:",
-          error.response?.data || error.message
-        );
-      }
-    };
-
     fetchProducts();
     fetchCart();
   }, [clienteId]);
@@ -55,20 +54,49 @@ const OrderPage = () => {
     }
 
     try {
+      const prods = [];
+      let prodExiste = false;
+
+      if (cart) {
+        cart.forEach((item) => {
+          let itemId;
+
+          if (item.producto_id._id) {
+            itemId = item.producto_id._id;
+          } else {
+            itemId = item.producto_id;
+          }
+
+          if (String(itemId) === String(product._id)) {
+            prodExiste = true;
+            item.cantidad += quantity;
+          }
+
+          prods.push({
+            producto_id: itemId,
+            cantidad: item.cantidad,
+            precio: item.precio,
+          });
+        });
+      }
+
+      if (!prodExiste) {
+        prods.push({
+          producto_id: product._id,
+          cantidad: quantity,
+          precio: product.precio,
+        });
+      }
+
       const payload = {
         cliente_id: clienteId,
-        productos: [
-          {
-            producto_id: product._id,
-            cantidad: quantity,
-            precio: product.precio,
-          },
-        ],
+        productos: prods,
       };
 
       const res = await axios.post(`${apiBaseUrl}/carrito/agregar`, payload);
       console.log("Carrito actualizado:", res.data);
       setCart(res.data.productos);
+      await fetchProducts();
     } catch (error) {
       console.error(
         "Error al agregar al carrito:",
@@ -90,6 +118,7 @@ const OrderPage = () => {
       );
       console.log("Producto eliminado del carrito:", res.data);
       setCart(res.data.productos);
+      //await fetchProducts();
     } catch (error) {
       console.error("Error al eliminar del carrito:", error);
     }
@@ -150,7 +179,37 @@ const OrderPage = () => {
       console.log(pedido);
       handleEmptyCart();
     } catch (error) {
-      console.error("Error al comppletar el pedido:", error);
+      console.error("Error al completar el pedido:", error);
+    }
+  }
+
+  function renderAddToCart(product) {
+    if (product.stock > 0) {
+      return (
+        <div className="flex items-center justify-center space-x-2 mt-auto">
+          <input
+            type="number"
+            min="1"
+            defaultValue="1"
+            className="w-16 border rounded font-lilita p-1 text-center"
+            id={`quantity-${product._id}`}
+            max={product.stock}
+          />
+          <button
+            onClick={() =>
+              handleAddToCart(
+                product,
+                parseInt(
+                  document.getElementById(`quantity-${product._id}`).value
+                )
+              )
+            }
+            className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white px-4 py-2 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
+          >
+            Agregar
+          </button>
+        </div>
+      );
     }
   }
 
@@ -190,33 +249,14 @@ const OrderPage = () => {
                   <p className="text-gray-600 text-sm mb-2 text-center truncate">
                     {product.descripcion}
                   </p>
+                  <p className="text-gray-600 text-sm mb-2 text-center truncate">
+                    Stock: {product.stock}
+                  </p>
                   <p className="text-purple-700 font-semibold mb-4 text-center">
-                    Precio: ${product.precio}
+                    Precio: ₡{product.precio}
                   </p>
                 </div>
-                <div className="flex items-center justify-center space-x-2 mt-auto">
-                  <input
-                    type="number"
-                    min="1"
-                    defaultValue="1"
-                    className="w-16 border rounded font-lilita p-1 text-center"
-                    id={`quantity-${product._id}`}
-                  />
-                  <button
-                    onClick={() =>
-                      handleAddToCart(
-                        product,
-                        parseInt(
-                          document.getElementById(`quantity-${product._id}`)
-                            .value
-                        )
-                      )
-                    }
-                    className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white px-4 py-2 rounded-full shadow-md hover:scale-105 hover:shadow-lg transition-transform"
-                  >
-                    Agregar
-                  </button>
-                </div>
+                {renderAddToCart(product)}
               </div>
             ))}
           </div>
@@ -239,7 +279,7 @@ const OrderPage = () => {
                   <div className="flex-1 ml-4">
                     <h3 className="font-bold text-sm">{item.nombre}</h3>
                     <p className="text-gray-600 text-sm">
-                      Precio: ${item.precio}
+                      Precio: ₡{item.precio}
                     </p>
                     <p className="text-gray-600 text-sm">
                       Cantidad: {item.cantidad}
@@ -255,7 +295,7 @@ const OrderPage = () => {
               ))}
               <div className="border-t pt-4">
                 <h3 className="font-bold text-lg">
-                  Total: $
+                  Total: ₡
                   {cart.reduce(
                     (acc, item) => acc + item.precio * item.cantidad,
                     0

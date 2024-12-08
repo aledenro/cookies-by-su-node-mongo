@@ -1,23 +1,51 @@
 const Carrito = require("../models/carritoModel");
 const Producto = require("../models/productosModel");
 const EstadisticasVentas = require("../models/estadisticasVentasModel");
+const _ = require("lodash");
 
 const agregarAlCarrito = async (cliente_id, productos) => {
   try {
     let total = 0;
 
+    const oldCarrito = await Carrito.findOne({ cliente_id: cliente_id });
+
     for (const item of productos) {
+      let itemExiste;
+      let oldItemCantidad = 0;
+      let cantidadAdicional = 0;
+
+      if (oldCarrito) {
+        for (const oldItem of oldCarrito.productos) {
+          itemExiste = false;
+          let oldItemId;
+
+          oldItemId = oldItem.producto_id.toString();
+
+          if (String(oldItemId) === String(item.producto_id)) {
+            itemExiste = true;
+            oldItemCantidad = oldItem.cantidad;
+            cantidadAdicional = item.cantidad - oldItemCantidad;
+          }
+        }
+      }
+
       const producto = await Producto.findById(item.producto_id);
       if (!producto) {
         throw new Error(`El producto con ID ${item.producto_id} no existe.`);
       }
-      if (item.cantidad > producto.stock) {
-        throw new Error(
-          `El stock disponible para el producto ${producto.nombre} es insuficiente.`
-        );
+
+      if (!itemExiste) {
+        if (cantidadAdicional > producto.stock) {
+          throw new Error(
+            `El stock disponible para el producto ${producto.nombre} es insuficiente.`
+          );
+        }
+
+        producto.stock -= cantidadAdicional;
+      } else {
+        producto.stock -= cantidadAdicional;
       }
 
-      producto.stock -= item.cantidad;
       await producto.save();
 
       item.precio = producto.precio;
@@ -43,6 +71,10 @@ const agregarAlCarrito = async (cliente_id, productos) => {
           anio: new Date().getFullYear(),
         });
       }
+    }
+
+    if (oldCarrito || !_.isEmpty(oldCarrito)) {
+      await Carrito.findByIdAndDelete(oldCarrito._id);
     }
 
     const nuevoCarrito = new Carrito({
@@ -72,6 +104,7 @@ const eliminarProductoDelCarrito = async (cliente_id, producto_id) => {
     const productoIndex = carrito.productos.findIndex(
       (item) => item._id.toString() === producto_id
     );
+
     if (productoIndex === -1)
       throw new Error("Producto no encontrado en el carrito.");
 
