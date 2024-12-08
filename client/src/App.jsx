@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import PedidoDetail from "./pages/public/pedido";
+import PedidosPanel from "./pages/admin/PedidosPanel";
 
 function App() {
   return (
@@ -44,6 +45,15 @@ function App() {
             element={
               <RoleProtectedRoute role="Admin">
                 <ProductPanel />
+              </RoleProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/pedidos-panel"
+            element={
+              <RoleProtectedRoute role="Admin">
+                <PedidosPanel />
               </RoleProtectedRoute>
             }
           />
