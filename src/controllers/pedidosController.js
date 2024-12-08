@@ -30,11 +30,11 @@ const crearPedido = async (req, res) => {
         });
       }
 
-      if (productoDB.stock < producto.cantidad) {
-        return res.status(400).json({
-          error: `Stock insuficiente para el producto ${productoDB.nombre}.`,
-        });
-      }
+      // if (productoDB.stock < producto.cantidad) {
+      //   return res.status(400).json({
+      //     error: `Stock insuficiente para el producto ${productoDB.nombre}.`,
+      //   });
+      // }
 
       productoDB.stock -= producto.cantidad;
       await productoDB.save();

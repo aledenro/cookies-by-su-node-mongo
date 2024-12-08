@@ -118,7 +118,7 @@ const OrderPage = () => {
       );
       console.log("Producto eliminado del carrito:", res.data);
       setCart(res.data.productos);
-      //await fetchProducts();
+      await fetchProducts();
     } catch (error) {
       console.error("Error al eliminar del carrito:", error);
     }
@@ -286,7 +286,7 @@ const OrderPage = () => {
                     </p>
                   </div>
                   <button
-                    onClick={() => handleRemoveFromCart(item._id)}
+                    onClick={() => handleRemoveFromCart(item.producto_id)}
                     className="text-red-500 text-sm hover:underline"
                   >
                     Quitar

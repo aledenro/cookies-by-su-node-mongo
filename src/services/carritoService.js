@@ -35,13 +35,13 @@ const agregarAlCarrito = async (cliente_id, productos) => {
       }
 
       if (!itemExiste) {
-        if (cantidadAdicional > producto.stock) {
+        if (item.cantidad > producto.stock) {
           throw new Error(
             `El stock disponible para el producto ${producto.nombre} es insuficiente.`
           );
         }
 
-        producto.stock -= cantidadAdicional;
+        producto.stock -= item.cantidad;
       } else {
         producto.stock -= cantidadAdicional;
       }
@@ -102,13 +102,14 @@ const eliminarProductoDelCarrito = async (cliente_id, producto_id) => {
     if (!carrito) throw new Error("Carrito no encontrado.");
 
     const productoIndex = carrito.productos.findIndex(
-      (item) => item._id.toString() === producto_id
+      (item) => item.producto_id.toString() === producto_id
     );
 
     if (productoIndex === -1)
       throw new Error("Producto no encontrado en el carrito.");
 
     const producto = await Producto.findById(producto_id);
+
     if (producto) {
       producto.stock += carrito.productos[productoIndex].cantidad;
       await producto.save();
