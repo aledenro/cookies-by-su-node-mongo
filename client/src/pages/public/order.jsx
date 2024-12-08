@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
-import { forEach } from "lodash";
+import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const apiBaseUrl = "http://localhost:4000/api";
@@ -178,6 +180,7 @@ const OrderPage = () => {
       const pedido = await axios.post(`${apiBaseUrl}/pedidos/crear`, payload);
       console.log(pedido);
       handleEmptyCart();
+      navigate(`/pedido/${pedido.data.pedido._id}`);
     } catch (error) {
       console.error("Error al completar el pedido:", error);
     }

@@ -20,7 +20,7 @@ const crearPedido = async (req, res) => {
       total,
     });
 
-    await nuevoPedido.save();
+    const pedidoDB = await nuevoPedido.save();
 
     for (const producto of productos) {
       const productoDB = await Producto.findById(producto.producto_id);
@@ -50,7 +50,7 @@ const crearPedido = async (req, res) => {
 
     res.status(201).json({
       message: "Pedido creado exitosamente y estadísticas actualizadas",
-      pedido: nuevoPedido,
+      pedido: pedidoDB,
     });
   } catch (error) {
     console.error("Error al crear el pedido:", error.message);
@@ -74,9 +74,7 @@ const obtenerPedidoPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const pedido = await Pedido.findById(id)
-      .populate("cliente_id")
-      .populate("productos.producto_id");
+    const pedido = await Pedido.findById(id).populate("productos.producto_id");
     if (!pedido) {
       return res.status(404).json({ error: "Pedido no encontrado" });
     }

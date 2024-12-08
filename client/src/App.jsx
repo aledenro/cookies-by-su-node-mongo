@@ -9,6 +9,7 @@ import EmployeePanel from "./pages/admin/EmployeePanel";
 import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
+import PedidoDetail from "./pages/public/pedido";
 
 function App() {
   return (
@@ -55,8 +56,15 @@ function App() {
               </RoleProtectedRoute>
             }
           />
+          <Route
+            path="/pedido/:pedidoId"
+            element={
+              <ProtectedRoute>
+                <PedidoDetail />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
-
       </Router>
     </AuthProvider>
   );
