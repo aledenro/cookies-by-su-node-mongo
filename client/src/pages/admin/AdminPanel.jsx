@@ -25,7 +25,7 @@ const AdminPanel = () => {
         <main className="container mx-auto">
           <section className="relative bg-gray-100 py-10">
             <div className="flex flex-col items-center">
-              <h1 className="text-4xl font-lilita font-bold mb-4">Estadísticas</h1>
+              <h1 className="text-4xl font-lilita font-bold mb-4">Estadísticas Generales</h1>
               <StatisticsCards />
             </div>
           </section>

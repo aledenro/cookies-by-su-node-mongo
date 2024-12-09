@@ -54,7 +54,7 @@ const OrderPage = () => {
     setShowCustomOrderForm(true);
   };
 
-
+  const [searchQuery, setSearchQuery] = useState("");
   const handleAddToCart = async (product, quantity) => {
     const clienteId = localStorage.getItem("clienteId");
     if (!clienteId) {
@@ -241,34 +241,46 @@ const OrderPage = () => {
       <main className="container mx-auto flex space-x-6 py-10">
         <section className="w-3/4">
           <h2 className="text-3xl font-lilita font-bold mb-6">Productos</h2>
+          <div className="w-full max-w-4xl mb-6">
+            <input
+              type="text"
+              placeholder="Buscar producto por nombre..."
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <div className="grid grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="border rounded-lg shadow-lg bg-white hover:shadow-xl transition p-4 flex flex-col justify-between h-90"
-              >
-                <img
-                  src={product.imagen || "https://via.placeholder.com/150"}
-                  alt={product.nombre}
-                  className="w-full h-50 object-cover rounded-t-lg mb-4"
-                />
-                <div>
-                  <h3 className="text-lg font-bold mb-1 text-center">
-                    {product.nombre}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-2 text-center truncate">
-                    {product.descripcion}
-                  </p>
-                  <p className="text-gray-600 text-sm mb-2 text-center truncate">
-                    Stock: {product.stock}
-                  </p>
-                  <p className="text-purple-700 font-semibold mb-4 text-center">
-                    Precio: ₡{product.precio}
-                  </p>
+            {products
+              .filter((producto) =>
+                producto.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((product) => (
+                <div
+                  key={product._id}
+                  className="border rounded-lg shadow-lg bg-white hover:shadow-xl transition p-4 flex flex-col justify-between h-90"
+                >
+                  <img
+                    src={product.imagen || "https://via.placeholder.com/150"}
+                    alt={product.nombre}
+                    className="w-full h-50 object-cover rounded-t-lg mb-4"
+                  />
+                  <div>
+                    <h3 className="text-lg font-bold mb-1 text-center">
+                      {product.nombre}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-2 text-center truncate">
+                      {product.descripcion}
+                    </p>
+                    <p className="text-gray-600 text-sm mb-2 text-center truncate">
+                      Stock: {product.stock}
+                    </p>
+                    <p className="text-purple-700 font-semibold mb-4 text-center">
+                      Precio: ₡{product.precio}
+                    </p>
+                  </div>
+                  {renderAddToCart(product)}
                 </div>
-                {renderAddToCart(product)}
-              </div>
-            ))}
+              ))}
           </div>
         </section>
 
@@ -326,7 +338,7 @@ const OrderPage = () => {
           <button
             onClick={() => setShowCustomOrderForm(true)}
             className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white font-semibold w-full py-2 mt-4 rounded-full shadow-md hover:shadow-lg transition-transform"
-            >
+          >
             Pedido Personalizado
           </button>
         </aside>

@@ -1,6 +1,6 @@
 const estadisticasVentasService = require("../services/estadisticasVentasService");
 const User = require("../models/userModel");
-const Pedido = require("../models/pedidosPersonalizadosModel");
+const Pedido = require("../models/pedidosModel");
 
 const registrarVenta = async (req, res) => {
     try {
@@ -47,31 +47,28 @@ const obtenerEstadisticasPorProducto = async (req, res) => {
 
 const obtenerEstadisticasGenerales = async (req, res) => {
     try {
-        const totalUsuarios = await User.countDocuments();
-
-        const ventas = await Pedido.aggregate([
-            { $unwind: "$productos" },
-            {
-                $group: {
-                    _id: null,
-                    totalCantidad: { $sum: "$productos.cantidad" },
-                    totalPrecio: { $sum: "$productos.precio" },
-                },
-            },
-        ]);
-
-        const { totalCantidad = 0, totalPrecio = 0 } = ventas[0] || {};
-
-        res.status(200).json({
-            totalUsuarios,
-            totalProductosVendidos: totalCantidad,
-            totalPrecioVendido: totalPrecio,
-        });
+      const pedidos = await Pedido.find();
+  
+      const totalVentas = pedidos.reduce((acc, pedido) => acc + pedido.total, 0);
+      const totalProductosVendidos = pedidos.reduce(
+        (acc, pedido) =>
+          acc +
+          pedido.productos.reduce((subAcc, producto) => subAcc + producto.cantidad, 0),
+        0
+      );
+  
+      const totalUsuarios = new Set(pedidos.map((pedido) => pedido.cliente_id)).size;
+  
+      res.status(200).json({
+        totalPrecioVendido: totalVentas,
+        totalProductosVendidos,
+        totalUsuarios,
+      });
     } catch (error) {
-        console.error("Error en obtenerEstadisticasGenerales:", error.message);
-        res.status(500).json({ message: "Error al obtener estadísticas generales: " + error.message });
+      console.error("Error al obtener estadísticas generales:", error.message);
+      res.status(500).json({ error: "Error interno del servidor" });
     }
-};
+  };
 
 module.exports = {
     registrarVenta,

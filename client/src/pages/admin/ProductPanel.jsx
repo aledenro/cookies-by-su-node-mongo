@@ -15,6 +15,8 @@ const ProductPanel = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const totalPages = Math.ceil(productos.length / itemsPerPage);
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const [editId, setEditId] = useState(null);
 
@@ -219,6 +221,17 @@ const ProductPanel = () => {
               <h1 className="text-3xl font-lilita font-bold mb-6 text-center">
                 Lista de Productos
               </h1>
+
+              {/* Input de búsqueda */}
+              <div className="w-full max-w-4xl mb-6">
+                <input
+                  type="text"
+                  placeholder="Buscar producto por nombre..."
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
               <table className="w-full max-w-4xl border-collapse bg-white shadow-md rounded-lg overflow-hidden">
                 <thead>
                   <tr className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white">
@@ -233,16 +246,15 @@ const ProductPanel = () => {
                 </thead>
                 <tbody>
                   {productos
-                    .slice(
-                      (currentPage - 1) * itemsPerPage,
-                      currentPage * itemsPerPage
+                    .filter((producto) =>
+                      producto.nombre.toLowerCase().includes(searchQuery.toLowerCase())
                     )
+                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                     .map((producto, index) => (
                       <tr
                         key={producto._id}
-                        className={`text-gray-700 ${
-                          index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                        } hover:bg-gray-100 transition duration-300`}
+                        className={`text-gray-700 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                          } hover:bg-gray-100 transition duration-300`}
                       >
                         <td className="p-4">{producto.nombre}</td>
                         <td className="p-4">{producto.categoria}</td>
@@ -250,13 +262,12 @@ const ProductPanel = () => {
                         <td className="p-4">{producto.stock}</td>
                         <td className="p-4">
                           <span
-                            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                              producto.estado === "Activo"
+                            className={`px-3 py-1 rounded-full text-sm font-semibold ${producto.estado === "Activo"
                                 ? "bg-green-200 text-green-800"
                                 : producto.estado === "Descontinuado"
-                                ? "bg-yellow-200 text-yellow-800"
-                                : "bg-red-200 text-red-800"
-                            }`}
+                                  ? "bg-yellow-200 text-yellow-800"
+                                  : "bg-red-200 text-red-800"
+                              }`}
                           >
                             {producto.estado}
                           </span>
@@ -291,15 +302,15 @@ const ProductPanel = () => {
                     ))}
                 </tbody>
               </table>
+
               <div className="flex justify-center mt-6">
                 <button
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(currentPage - 1)}
-                  className={`px-4 py-2 mx-1 rounded-lg ${
-                    currentPage === 1
+                  className={`px-4 py-2 mx-1 rounded-lg ${currentPage === 1
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-                  }`}
+                    }`}
                 >
                   Anterior
                 </button>
@@ -307,17 +318,17 @@ const ProductPanel = () => {
                 <button
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage(currentPage + 1)}
-                  className={`px-4 py-2 mx-1 rounded-lg ${
-                    currentPage === totalPages
+                  className={`px-4 py-2 mx-1 rounded-lg ${currentPage === totalPages
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
-                  }`}
+                    }`}
                 >
                   Siguiente
                 </button>
               </div>
             </div>
           </section>
+
         </main>
       </div>
     </>
