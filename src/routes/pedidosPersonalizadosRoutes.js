@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require("../middlewares/multerConfig");
 const {
     agregarPedidoPersonalizado,
     obtenerPedidosPersonalizados,
@@ -9,10 +10,10 @@ const {
 
 const router = express.Router();
 
-router.post("/agregarPedidoPersonalizado", agregarPedidoPersonalizado); 
+router.post("/agregar", upload.array("imagenes"), agregarPedidoPersonalizado); 
 router.get("/", obtenerPedidosPersonalizados);
 router.get("/:id", obtenerPedidoPersonalizado); 
-router.put("/actualizar/:id", actualizarPedidoPersonalizado);
+router.put("/actualizar/:id", upload.array("imagenes"), actualizarPedidoPersonalizado);
 router.delete("/eliminar/:id", eliminarPedidoPersonalizado);
 
 module.exports = router;

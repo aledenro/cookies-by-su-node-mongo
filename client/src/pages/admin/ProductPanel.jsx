@@ -276,7 +276,7 @@ const ProductPanel = () => {
                         <td className="p-4">
                           <button
                             onClick={() => handleEdit(producto)}
-                            className="bg-yellow-500 text-white px-3 py-1 mr-2 rounded hover:bg-yellow-600 transition duration-300"
+                            className="bg-yellow-400 text-white px-3 py-1 mr-2 rounded hover:bg-yellow-600 transition duration-300"
                           >
                             Editar
                           </button>

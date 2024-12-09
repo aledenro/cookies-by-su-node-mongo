@@ -1,20 +1,47 @@
 const pedidosPersonalizadosService = require("../services/pedidosPersonalizadosService");
+const { uploadImageToFirebase } = require("../utils/firebaseConfig");
+const PedidoPersonalizado = require("../models/pedidosPersonalizadosModel");
+
 
 const agregarPedidoPersonalizado = async (req, res) => {
     try {
-        const pedidoGuardado = await pedidosPersonalizadosService.agregarPedidoPersonalizado(req.body);
+        const { descripcion, cantidad, correo_electronico, telefono_celular, fecha_entrega } = req.body;
+        const imagenes = [];
+
+        if (req.files) {
+            for (const file of req.files) {
+                const fileName = `pedidos/${Date.now()}_${file.originalname}`;
+                const imageUrl = await uploadImageToFirebase(file, fileName);
+                imagenes.push(imageUrl);
+            }
+        }
+
+        const pedidoData = {
+            descripcion,
+            cantidad: parseInt(cantidad),
+            imagenes,
+            correo_electronico,
+            telefono_celular,
+            fecha_entrega,
+            fecha_pedido: new Date(),
+        };
+
+        const pedidoGuardado = await pedidosPersonalizadosService.agregarPedidoPersonalizado(pedidoData);
         res.status(201).json(pedidoGuardado);
     } catch (error) {
+        console.error("Error al agregar el pedido personalizado:", error);
         res.status(500).json({ error: error.message });
     }
 };
 
+
 const obtenerPedidosPersonalizados = async (req, res) => {
     try {
-        const pedidos = await pedidosPersonalizadosService.obtenerPedidosPersonalizados();
+        const pedidos = await PedidoPersonalizado.find();
         res.status(200).json(pedidos);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error al obtener los pedidos personalizados:", error);
+        res.status(500).json({ error: "Error al obtener los pedidos personalizados" });
     }
 };
 

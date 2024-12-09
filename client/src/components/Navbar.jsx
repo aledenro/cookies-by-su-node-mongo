@@ -15,12 +15,6 @@ const Navbar = () => {
         </div>
 
         <ul className="flex space-x-8 text-sm font-medium text-gray-600">
-          <li>
-            <Link to="/blog" className="hover:text-gray-900 transition duration-300">
-              Blog
-            </Link>
-          </li>
-
           {!isAuthenticated && (
             <li>
               <Link to="/login" className="hover:text-gray-900 transition duration-300">

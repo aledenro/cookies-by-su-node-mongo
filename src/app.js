@@ -56,7 +56,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/api/", userRoutes);
 app.use("/api/descuentos/", descuentosRoutes);
-app.use("/api/pedidos-personalizados", pedidosPersonalizadosRoutes);
+app.use("/api/pedidosPersonalizados", pedidosPersonalizadosRoutes);
 app.use("/api/envios", enviosRoutes);
 app.use("/api/pagos", pagosRoutes);
 app.use("/api/productos", productosRoutes);

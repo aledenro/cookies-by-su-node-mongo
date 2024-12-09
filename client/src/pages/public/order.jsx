@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
+import PedidoPersonalizadoForm from "../../components/PedidoPersonalizadoForm";
 import { useNavigate } from "react-router-dom";
 
 const OrderPage = () => {
@@ -8,6 +9,7 @@ const OrderPage = () => {
 
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [showCustomOrderForm, setShowCustomOrderForm] = useState(false);
   const apiBaseUrl = "http://localhost:4000/api";
   const clienteId = localStorage.getItem("clienteId");
   if (!clienteId) {
@@ -47,6 +49,11 @@ const OrderPage = () => {
     fetchProducts();
     fetchCart();
   }, [clienteId]);
+
+  const handleCustomOrderClick = () => {
+    setShowCustomOrderForm(true);
+  };
+
 
   const handleAddToCart = async (product, quantity) => {
     const clienteId = localStorage.getItem("clienteId");
@@ -310,13 +317,33 @@ const OrderPage = () => {
                 >
                   Finalizar compra
                 </button>
+
               </div>
             </div>
           ) : (
             <p className="text-gray-600 text-center">El carrito está vacío.</p>
           )}
+          <button
+            onClick={() => setShowCustomOrderForm(true)}
+            className="bg-gradient-to-r from-pink-300 via-purple-300 to-yellow-300 text-white font-semibold w-full py-2 mt-4 rounded-full shadow-md hover:shadow-lg transition-transform"
+            >
+            Pedido Personalizado
+          </button>
         </aside>
       </main>
+      {showCustomOrderForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+            <PedidoPersonalizadoForm />
+            <button
+              onClick={() => setShowCustomOrderForm(false)}
+              className="mt-4 text-red-500 hover:text-red-700"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

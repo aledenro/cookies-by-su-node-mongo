@@ -10,7 +10,9 @@ import HomePage from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import PedidoDetail from "./pages/public/pedido";
+import PedidoPersonalizadoDetail from "./pages/public/PedidoPersonalizadoDetalle";
 import PedidosPanel from "./pages/admin/PedidosPanel";
+import PedidosPersonalizadosPanel from "./pages/admin/PedidosPersonalizadosPanel";
 import UsuariosPanel from "./pages/admin/UsuariosPanel";
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
 
           <Route
             path="/admin-panel"
@@ -60,6 +63,15 @@ function App() {
           />
 
           <Route
+            path="/pedidos-personalizados-panel"
+            element={
+              <RoleProtectedRoute role="Admin">
+                <PedidosPersonalizadosPanel />
+              </RoleProtectedRoute>
+            }
+          />
+
+          <Route
             path="/usuarios-panel"
             element={
               <RoleProtectedRoute role="Admin">
@@ -81,6 +93,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <PedidoDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pedidoPersonalizado/:id"
+            element={
+              <ProtectedRoute>
+                <PedidoPersonalizadoDetail />
               </ProtectedRoute>
             }
           />
