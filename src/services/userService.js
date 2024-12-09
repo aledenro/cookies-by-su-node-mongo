@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 
 class UserService {
   async getUsers() {
-    return await User.find({}, "nombre email roles");
+    return await User.find({}, "nombre email roles fecha_registro estado");
   }
 
   async getUserById(id) {
@@ -51,7 +51,6 @@ class UserService {
       throw error;
     }
   }
-
 
   async createUser(data) {
     const user = new User(data);

@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
 import PedidoDetail from "./pages/public/pedido";
 import PedidosPanel from "./pages/admin/PedidosPanel";
+import UsuariosPanel from "./pages/admin/UsuariosPanel";
 
 function App() {
   return (
@@ -54,6 +55,15 @@ function App() {
             element={
               <RoleProtectedRoute role="Admin">
                 <PedidosPanel />
+              </RoleProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/usuarios-panel"
+            element={
+              <RoleProtectedRoute role="Admin">
+                <UsuariosPanel />
               </RoleProtectedRoute>
             }
           />

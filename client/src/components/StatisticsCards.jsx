@@ -10,7 +10,9 @@ const StatisticsCards = () => {
 
   const fetchStatistics = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/estadisticas-ventas/generales");
+      const response = await axios.get(
+        "http://localhost:4000/api/estadisticas-ventas/generales"
+      );
       setStats(response.data);
     } catch (error) {
       console.error("Error fetching statistics:", error.message);
@@ -25,21 +27,27 @@ const StatisticsCards = () => {
     <div className="container mx-auto py-10">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-lg font-bold text-gray-700 mb-2">Ventas Totales</h3>
+          <h3 className="text-lg font-bold text-gray-700 mb-2">
+            Ventas Totales
+          </h3>
           <p className="text-2xl font-semibold text-blue-500">
-            ${stats.totalPrecioVendido.toLocaleString()}
+            ₡{stats.totalPrecioVendido.toLocaleString()}
           </p>
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-lg font-bold text-gray-700 mb-2">Productos Vendidos</h3>
+          <h3 className="text-lg font-bold text-gray-700 mb-2">
+            Productos Vendidos
+          </h3>
           <p className="text-2xl font-semibold text-green-500">
             {stats.totalProductosVendidos.toLocaleString()}
           </p>
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 text-center">
-          <h3 className="text-lg font-bold text-gray-700 mb-2">Usuarios Registrados</h3>
+          <h3 className="text-lg font-bold text-gray-700 mb-2">
+            Usuarios Registrados
+          </h3>
           <p className="text-2xl font-semibold text-pink-500">
             {stats.totalUsuarios.toLocaleString()}
           </p>
