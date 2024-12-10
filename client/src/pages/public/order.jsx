@@ -252,7 +252,9 @@ const OrderPage = () => {
           <div className="grid grid-cols-4 gap-6">
             {products
               .filter((producto) =>
-                producto.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+                producto.nombre
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
               )
               .map((product) => (
                 <div
@@ -260,7 +262,7 @@ const OrderPage = () => {
                   className="border rounded-lg shadow-lg bg-white hover:shadow-xl transition p-4 flex flex-col justify-between h-90"
                 >
                   <img
-                    src={product.imagen || "https://via.placeholder.com/150"}
+                    src={"../static/image.png"}
                     alt={product.nombre}
                     className="w-full h-50 object-cover rounded-t-lg mb-4"
                   />
@@ -329,7 +331,6 @@ const OrderPage = () => {
                 >
                   Finalizar compra
                 </button>
-
               </div>
             </div>
           ) : (
