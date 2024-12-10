@@ -252,7 +252,9 @@ const OrderPage = () => {
           <div className="grid grid-cols-4 gap-6">
             {products
               .filter((producto) =>
-                producto.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+                producto.nombre
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
               )
               .map((product) => (
                 <div
@@ -329,7 +331,6 @@ const OrderPage = () => {
                 >
                   Finalizar compra
                 </button>
-
               </div>
             </div>
           ) : (

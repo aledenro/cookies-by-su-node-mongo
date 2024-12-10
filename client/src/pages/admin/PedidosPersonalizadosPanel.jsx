@@ -20,7 +20,9 @@ const PedidosPersonalizadosPanel = () => {
       setPedidos(res.data);
     } catch (error) {
       console.error("Error al cargar pedidos personalizados:", error);
-      alert("No se pudieron cargar los pedidos personalizados. Intenta nuevamente más tarde.");
+      alert(
+        "No se pudieron cargar los pedidos personalizados. Intenta nuevamente más tarde."
+      );
     }
   };
 
@@ -74,13 +76,15 @@ const PedidosPersonalizadosPanel = () => {
                     <th className="p-4 text-left">Correo Electrónico</th>
                     <th className="p-4 text-left">Teléfono</th>
                     <th className="p-4 text-left">Fecha de Entrega</th>
-                    <th className="p-4 text-left">Estado</th>
                     <th className="p-4 text-left">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pedidos
-                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                    .slice(
+                      (currentPage - 1) * itemsPerPage,
+                      currentPage * itemsPerPage
+                    )
                     .map((pedido, index) => (
                       <tr
                         key={pedido._id}
@@ -89,10 +93,15 @@ const PedidosPersonalizadosPanel = () => {
                         } hover:bg-gray-100 transition duration-300`}
                       >
                         <td className="p-4">{pedido._id}</td>
-                        <td className="p-4">{pedido.correo_electronico || "Sin correo"}</td>
-                        <td className="p-4">{pedido.telefono_celular || "Sin teléfono"}</td>
-                        <td className="p-4">{formatDate(pedido.fecha_entrega)}</td>
-                        <td className="p-4">{pedido.estado || "Pendiente"}</td>
+                        <td className="p-4">
+                          {pedido.correo_electronico || "Sin correo"}
+                        </td>
+                        <td className="p-4">
+                          {pedido.telefono_celular || "Sin teléfono"}
+                        </td>
+                        <td className="p-4">
+                          {formatDate(pedido.fecha_entrega)}
+                        </td>
                         <td className="p-4">
                           <button
                             onClick={() => handleVerDetalle(pedido._id)}
