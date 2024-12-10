@@ -260,7 +260,7 @@ const OrderPage = () => {
                   className="border rounded-lg shadow-lg bg-white hover:shadow-xl transition p-4 flex flex-col justify-between h-90"
                 >
                   <img
-                    src={product.imagen || "https://via.placeholder.com/150"}
+                    src={product.imagen || "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/pngtree-cute-kawaii-kawaii-cookie-with-blue-eyes-and-a-smiling-face-vector-png-image_6913021.png"}
                     alt={product.nombre}
                     className="w-full h-50 object-cover rounded-t-lg mb-4"
                   />
@@ -294,7 +294,7 @@ const OrderPage = () => {
                   className="border-b pb-4 mb-4 flex items-center justify-between"
                 >
                   <img
-                    src={item.imagen || "https://via.placeholder.com/50"}
+                    src={item.imagen || "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/pngtree-cute-kawaii-kawaii-cookie-with-blue-eyes-and-a-smiling-face-vector-png-image_6913021.png"}
                     alt={item.nombre}
                     className="w-16 h-16 object-cover rounded-md"
                   />

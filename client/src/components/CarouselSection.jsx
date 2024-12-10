@@ -29,11 +29,11 @@ const CarouselSection = () => {
   };
 
   const images = [
-    "https://r2.fivemanage.com/pub/uv1nlgt9dt2y.jpg",
-    "https://r2.fivemanage.com/pub/2q9p13rhnlbe.jpg",
-    "https://r2.fivemanage.com/pub/rsvo9g03zgyw.jpg",
-    "https://r2.fivemanage.com/pub/jjdwbnhb2ozl.jpg",
-    "https://r2.fivemanage.com/pub/td40fs1xdh8m.jpg",
+    "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/351118112_6264946373592569_1826043116730662657_n.jpg",
+    "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/348575197_265578719309951_3034391994158666451_n.jpg",
+    "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/346834790_1387075515471996_6448523168550510551_n.jpg",
+    "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/363296740_182143578192414_3356794052320316428_n.jpg",
+    "https://r2.fivemanage.com/kbqI3AHdhK2QGt3ZcWIHM/456561606_17929745045922197_2519593361279389574_n.jpg",
   ];
 
   return (
